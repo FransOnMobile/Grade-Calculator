@@ -66,3 +66,29 @@ function calculateTotalGrade() {
 
     document.getElementById('result').innerText = `Your final grade percentage is: ${totalGrade.toFixed(2)}%`;
 }
+
+function saveCourse() {
+    const courseName = document.getElementById('courseName').value;
+    const numComponents = document.getElementById('numComponents').value;
+    if (!courseName || !numComponents) {
+        alert('Please enter the course name and number of components.');
+        return;
+    }
+
+    const savedCourses = document.getElementById('savedCourses');
+    const listItem = document.createElement('li');
+    listItem.textContent = courseName;
+    savedCourses.appendChild(listItem);
+
+    listItem.onclick = () => {
+        alert(`Course: ${courseName} - Clicked`);
+    };
+
+    // Optional: Store course data in a local storage or variable
+    // This is where you can save course details if needed
+}
+
+function clearCourses() {
+    const savedCourses = document.getElementById('savedCourses');
+    savedCourses.innerHTML = ''; // Clear all saved courses
+}
