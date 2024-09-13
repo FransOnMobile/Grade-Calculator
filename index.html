@@ -27,18 +27,8 @@
             <h2>Saved Courses</h2>
             <ul id="savedCourses"></ul>
             <button onclick="clearCourses()">Clear All Courses</button>
+            <p id="cumulativeGwa"></p>
         </div>
-    </div>
-
-    <div class="gwa-container">
-        <h2>GWA Calculator</h2>
-        <label for="gwaUnits">Number of Courses:</label>
-        <input type="number" id="gwaUnits" min="1" placeholder="Enter the number of courses" onchange="createGWACalculatorInputs()">
-
-        <div id="gwaCoursesContainer"></div>
-
-        <button onclick="calculateGWA()">Calculate GWA</button>
-        <p id="gwaResult"></p>
     </div>
 
     <script src="script.js"></script>

@@ -66,7 +66,21 @@ function calculateTotalGrade() {
         }
     }
 
-    document.getElementById('result').innerText = `Your final grade percentage is: ${totalGrade.toFixed(2)}%`;
+    const gwaEquivalent = calculateGWAEquivalent(totalGrade);
+    document.getElementById('result').innerText = `Your final grade percentage is: ${totalGrade.toFixed(2)}% (GWA Equivalent: ${gwaEquivalent})`;
+}
+
+function calculateGWAEquivalent(grade) {
+    if (grade >= 96) return 1.0;
+    else if (grade >= 92) return 1.25;
+    else if (grade >= 88) return 1.5;
+    else if (grade >= 84) return 1.75;
+    else if (grade >= 80) return 2.0;
+    else if (grade >= 75) return 2.25;
+    else if (grade >= 70) return 2.5;
+    else if (grade >= 65) return 2.75;
+    else if (grade >= 60) return 3.0;
+    else return 5.0; // Failing grade
 }
 
 function saveCourse() {
@@ -80,7 +94,8 @@ function saveCourse() {
     const courseData = {
         courseName,
         numComponents,
-        components: []
+        components: [],
+        gwa: parseFloat(document.getElementById('result').innerText.split('GWA Equivalent: ')[1]) || 5.0
     };
 
     for (let i = 0; i < numComponents; i++) {
@@ -102,6 +117,7 @@ function saveCourse() {
     savedCourses.push(courseData);
     localStorage.setItem('courses', JSON.stringify(savedCourses));
     displaySavedCourses();
+    calculateCumulativeGWA();
 }
 
 function displaySavedCourses() {
@@ -111,7 +127,7 @@ function displaySavedCourses() {
 
     savedCourses.forEach((course, index) => {
         const listItem = document.createElement('li');
-        listItem.textContent = course.courseName;
+        listItem.textContent = `${course.courseName} (GWA: ${course.gwa})`;
         listItem.onclick = () => displayCourseDetails(index);
         savedCoursesList.appendChild(listItem);
     });
@@ -135,47 +151,29 @@ function displayCourseDetails(index) {
 function clearCourses() {
     localStorage.removeItem('courses');
     displaySavedCourses();
+    calculateCumulativeGWA();
 }
 
 function loadSavedCourses() {
     displaySavedCourses();
+    calculateCumulativeGWA();
 }
 
-function createGWACalculatorInputs() {
-    const numCourses = document.getElementById('gwaUnits').value;
-    const gwaContainer = document.getElementById('gwaCoursesContainer');
-    gwaContainer.innerHTML = ''; // Clear previous inputs
-
-    for (let i = 0; i < numCourses; i++) {
-        const gwaDiv = document.createElement('div');
-        gwaDiv.className = 'gwa-course';
-        gwaDiv.innerHTML = `
-            <label for="gwaCourseName${i}">Course Name:</label>
-            <input type="text" id="gwaCourseName${i}" placeholder="Enter course name">
-            
-            <label for="gwaGrade${i}">Grade:</label>
-            <input type="number" id="gwaGrade${i}" step="0.01" min="1.0" max="5.0" placeholder="Enter grade (e.g., 1.0, 2.5)">
-            
-            <label for="gwaUnits${i}">Units:</label>
-            <input type="number" id="gwaUnits${i}" min="1" placeholder="Enter units">
-        `;
-        gwaContainer.appendChild(gwaDiv);
+function calculateCumulativeGWA() {
+    const savedCourses = JSON.parse(localStorage.getItem('courses')) || [];
+    if (savedCourses.length === 0) {
+        document.getElementById('cumulativeGwa').innerText = 'No saved courses. Cumulative GWA is N/A.';
+        return;
     }
-}
 
-function calculateGWA() {
-    const numCourses = document.getElementById('gwaUnits').value;
     let totalGradePoints = 0;
-    let totalUnits = 0;
+    let totalCourses = 0;
 
-    for (let i = 0; i < numCourses; i++) {
-        const grade = parseFloat(document.getElementById(`gwaGrade${i}`).value);
-        const units = parseInt(document.getElementById(`gwaUnits${i}`).value);
+    savedCourses.forEach(course => {
+        totalGradePoints += course.gwa;
+        totalCourses++;
+    });
 
-        totalGradePoints += grade * units;
-        totalUnits += units;
-    }
-
-    const gwa = totalGradePoints / totalUnits;
-    document.getElementById('gwaResult').innerText = `Your GWA is: ${gwa.toFixed(2)}`;
+    const cumulativeGwa = totalGradePoints / totalCourses;
+    document.getElementById('cumulativeGwa').innerText = `Cumulative GWA: ${cumulativeGwa.toFixed(2)}`;
 }
