@@ -1,3 +1,5 @@
+document.addEventListener('DOMContentLoaded', loadSavedCourses);
+
 function createComponentInputs() {
     const numComponents = document.getElementById('numComponents').value;
     const container = document.getElementById('componentsContainer');
@@ -75,20 +77,25 @@ function saveCourse() {
         return;
     }
 
-    const savedCourses = document.getElementById('savedCourses');
-    const listItem = document.createElement('li');
-    listItem.textContent = courseName;
-    savedCourses.appendChild(listItem);
-
-    listItem.onclick = () => {
-        alert(`Course: ${courseName} - Clicked`);
+    const courseData = {
+        courseName,
+        numComponents,
+        components: []
     };
 
-    // Optional: Store course data in a local storage or variable
-    // This is where you can save course details if needed
-}
+    for (let i = 0; i < numComponents; i++) {
+        const componentName = document.getElementById(`componentName${i}`).value;
+        const weight = parseFloat(document.getElementById(`weight${i}`).value);
+        const numScores = document.getElementById(`numScores${i}`).value;
+        const scores = [];
 
-function clearCourses() {
-    const savedCourses = document.getElementById('savedCourses');
-    savedCourses.innerHTML = ''; // Clear all saved courses
-}
+        for (let j = 0; j < numScores; j++) {
+            const score = parseFloat(document.getElementById(`score${i}_${j}`).value);
+            const maxScore = parseFloat(document.getElementById(`maxScore${i}_${j}`).value);
+            scores.push({ score, maxScore });
+        }
+
+        courseData.components.push({ componentName, weight, scores });
+    }
+
+    let saved
