@@ -1,2 +1,2 @@
 Made by Francis Paul Kollin J. Morales!
-Expanding programming language through fun ideas :D
+Expanding programming knowledge through fun ideas :D
