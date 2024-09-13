@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grade Calculator</title>
+    <!-- Link to the CSS file -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Grade Calculator</h1>
+        <label for="courseName">Course Name:</label>
+        <input type="text" id="courseName" placeholder="Enter the course name">
+
+        <label for="numComponents">Number of Components:</label>
+        <input type="number" id="numComponents" min="1" placeholder="Enter the number of components" onchange="createComponentInputs()">
+
+        <div id="componentsContainer"></div>
+
+        <button onclick="calculateTotalGrade()">Calculate</button>
+        <p id="result"></p>
+    </div>
+
+    <!-- Link to the JavaScript file -->
+    <script src="script.js"></script>
+</body>
+</html>
